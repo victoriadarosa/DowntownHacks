@@ -60,3 +60,39 @@ app.post('/api/announcements', upload.single('picture'), async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+// API Route to Get All Announcements
+app.get('/api/announcements', async (req, res) => {
+    try {
+      const announcements = await Announcement.find();
+      res.status(200).json(announcements);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+// API Route to Get Announcements with filtering
+app.get('/api/announcements', async (req, res) => {
+    const { eventType, location, startDate, endDate } = req.query;
+    const query = {};
+  
+    if (eventType) {
+      query.eventType = eventType;
+    }
+  
+    if (location) {
+      query.location = { $regex: location, $options: 'i' }; // Case-insensitive search
+    }
+  
+    if (startDate && endDate) {
+      query.startTime = { $gte: new Date(startDate), $lte: new Date(endDate) };
+    }
+  
+    try {
+      const announcements = await Announcement.find(query);
+      res.status(200).json(announcements);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+  
