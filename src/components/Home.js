@@ -13,25 +13,19 @@ const Home = ({ user, onLogout }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { eventType, location, startDate, endDate } = filters;
-    // Create query string based on filters
-    const query = new URLSearchParams({
-      eventType,
-      location,
-      startDate,
-      endDate,
-    }).toString();
+    fetchAnnouncements();
+  }, []);
 
-    // Fetch announcements with filters
+  const fetchAnnouncements = () => {
     axios
-      .get(`http://localhost:5001/api/announcements?${query}`)
+      .get("http://localhost:5001/api/announcements")
       .then((response) => {
         setAnnouncements(response.data);
       })
       .catch((error) => {
-        console.error("There was an error fetching announcements!", error);
+        console.error("Error fetching announcements:", error);
       });
-  }, [filters]); // Re-fetch when filters change
+  };
 
   const handleCreateAnnouncement = () => {
     navigate("/create-announcement");
@@ -45,6 +39,28 @@ const Home = ({ user, onLogout }) => {
     }));
   };
 
+  const handleFilterSubmit = () => {
+    if (!filters.eventType && !filters.location && !filters.startDate && !filters.endDate) {
+      alert("Please fill at least one filter to apply.");
+      return;
+    }
+
+    // If 'All' is selected for eventType, we don't need to include it in the filters
+    const updatedFilters = { ...filters };
+    if (updatedFilters.eventType === "All") {
+      delete updatedFilters.eventType; // Exclude eventType filter
+    }
+
+    axios
+      .get("http://localhost:5001/api/announcements", { params: updatedFilters })
+      .then((response) => {
+        setAnnouncements(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching filtered announcements:", error);
+      });
+  };
+
   return (
     <div>
       <h1>Welcome, {user.name}!</h1>
@@ -54,71 +70,52 @@ const Home = ({ user, onLogout }) => {
       {/* Filter Form */}
       <div>
         <h2>Filter Announcements</h2>
-        
-        {/* Event Type Filter as a Select Dropdown */}
-        <select
-          name="eventType"
-          value={filters.eventType}
-          onChange={handleFilterChange}
-        >
-          <option value="">Select Event Type</option>
-          <option value="Local Events">Local Events</option>
-          <option value="Outdoor Activities">Outdoor Activities</option>
-          <option value="Volunteer">Volunteer</option>
-          <option value="Health">Health</option>
-          <option value="Family & Kids">Family & Kids</option>
-          <option value="Networking">Networking</option>
-          <option value="Other">Other</option>
-          {/* Add more options as needed */}
-        </select>
-
-        {/* Location Filter */}
-        <input
-          type="text"
-          name="location"
-          placeholder="Location"
-          value={filters.location}
-          onChange={handleFilterChange}
-        />
-        
-        {/* Date Range Filter */}
-        <input
-          type="date"
-          name="startDate"
-          value={filters.startDate}
-          onChange={handleFilterChange}
-        />
-        <input
-          type="date"
-          name="endDate"
-          value={filters.endDate}
-          onChange={handleFilterChange}
-        />
+        <div>
+          <label>Event Type:</label>
+          <select name="eventType" value={filters.eventType} onChange={handleFilterChange}>
+            <option value="All">All</option>
+            <option value="Safety Hazard">Safety Hazard</option>
+            <option value="Local Events">Local Events</option>
+            <option value="Outdoor Activities">Outdoor Activities</option>
+            <option value="Volunteer">Volunteer</option>
+            <option value="Health">Health</option>
+            <option value="Family & Kids">Family & Kids</option>
+            <option value="Networking">Networking</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label>Location:</label>
+          <input type="text" name="location" value={filters.location} onChange={handleFilterChange} />
+        </div>
+        <div>
+          <label>Start Date:</label>
+          <input type="date" name="startDate" value={filters.startDate} onChange={handleFilterChange} />
+        </div>
+        <div>
+          <label>End Date:</label>
+          <input type="date" name="endDate" value={filters.endDate} onChange={handleFilterChange} />
+        </div>
+        <button onClick={handleFilterSubmit}>Filter</button>
       </div>
 
-      {/* Display the filtered announcements */}
+      {/* Display Announcements */}
       <div>
         <h2>Announcements</h2>
         <ul>
-          {announcements.length > 0 ? (
-            announcements.map((announcement) => (
-              <li key={announcement._id}>
-                <h3>{announcement.eventName}</h3>
-                <p>{announcement.eventType}</p>
-                <p>{announcement.location}</p>
-                <p>
-                  {new Date(announcement.startTime).toLocaleString()} -{" "}
-                  {new Date(announcement.endTime).toLocaleString()}
-                </p>
-                {announcement.picture && (
-                  <img src={announcement.picture} alt="event" width={100} />
-                )}
-                <p>{announcement.description}</p>
-              </li>
-            ))
-          ) : (
-            <p>No announcements found.</p>
-          )}
+          {announcements.map((announcement) => (
+            <li key={announcement._id}>
+              <h3>{announcement.eventName}</h3>
+              <p>{announcement.eventType}</p>
+              <p>{announcement.location}</p>
+              <p>
+                {new Date(announcement.startTime).toLocaleString()} -{" "}
+                {new Date(announcement.endTime).toLocaleString()}
+              </p>
+              {announcement.picture && <img src={announcement.picture} alt="event" width={100} />}
+              <p>{announcement.description}</p>
+            </li>
+          ))}
         </ul>
       </div>
     </div>
