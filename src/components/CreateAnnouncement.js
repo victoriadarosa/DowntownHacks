@@ -6,8 +6,8 @@ const CreateAnnouncement = () => {
     const [eventName, setEventName] = useState("");
     const [eventType, setEventType] = useState("");
     const [location, setLocation] = useState("");
-    const [startTime, setStartTime] = useState(""); // Updated state for start time
-    const [endTime, setEndTime] = useState(""); // New state for end time
+    const [startTime, setStartTime] = useState(""); 
+    const [endTime, setEndTime] = useState(""); 
     const [picture, setPicture] = useState(null);
     const [description, setDescription] = useState("");
     const navigate = useNavigate();
@@ -38,21 +38,70 @@ const CreateAnnouncement = () => {
         }
     }, []);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Handle form submission logic here
-        console.log({
-            eventName,
-            eventType,
-            startTime,
-            endTime,
-            location,
-            picture,
-            description,
-        });
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     console.log({
+    //         eventName,
+    //         eventType,
+    //         startTime,
+    //         endTime,
+    //         location,
+    //         picture,
+    //         description,
+    //     });
 
-        navigate("/home");
-    };
+    //     navigate("/home");
+    // };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+  
+      
+    const formData = new FormData();
+    formData.append("eventName", eventName);
+    formData.append("eventType", eventType);
+    formData.append("location", location);
+    formData.append("startTime", startTime);
+    
+    // Only append optional fields if they have values
+    if (endTime) {
+        formData.append("endTime", endTime);
+    }
+    if (description) {
+        formData.append("description", description);
+    }
+    if (picture) {
+        formData.append("picture", picture); // Handle picture uploads
+    }
+
+    // Log the data being sent, showing only the optional fields if they are present
+    console.log({
+        eventName,
+        eventType,
+        location,
+        startTime,
+        endTime: endTime || "Not provided",
+        description: description || "Not provided",
+        picture: picture ? picture.name : null, // Log the picture name if it's provided
+    });
+  
+      try {
+          const response = await fetch("http://localhost:5001/api/announcements", {
+              method: "POST",
+              body: formData,
+          });
+  
+          if (response.ok) {
+              console.log("Announcement created successfully");
+              navigate("/home");
+          } else {
+              console.error("Error creating announcement:", response.statusText);
+          }
+      } catch (error) {
+          console.error("Error creating announcement:", error);
+      }
+  };
+  
 
     return (
         <form onSubmit={handleSubmit}>
@@ -95,6 +144,7 @@ const CreateAnnouncement = () => {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     required
+                    style={{ width: '400px', maxWidth: '100%' }}
                 />
             </div>
 
@@ -135,6 +185,9 @@ const CreateAnnouncement = () => {
             </div>
 
             <button type="submit">Create Announcement</button>
+            <button type="button" onClick={() => navigate("/home")}>
+                Back to Home
+            </button>
         </form>
     );
 };

@@ -1,11 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const Home = ({ user, onLogout }) => {
   const navigate = useNavigate();
 
   const handleCreateAnnouncement = () => {
-    navigate("/create-announcement"); // Redirect to the create announcement page
+    navigate("/create-announcement");
   };
 
   return (
