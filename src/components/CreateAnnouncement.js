@@ -1,115 +1,48 @@
-import React, { useState, useEffect, useRef } from "react"; 
-
-const loadGoogleMaps = (callback) => {
-  const tryLoadScript = (retryCount = 0) => {
-    // Check if Google Maps is already loaded
-    if (window.google && window.google.maps && window.google.maps.places) {
-      callback(window.google.maps);
-      return;
-    }
-
-    // Maximum retry count to avoid infinite retries
-    if (retryCount > 3) {
-      console.error("Google Maps API failed to load after several attempts.");
-      return;
-    }
-
-    // Check if the Google Maps script is already present in the DOM
-    const existingScript = document.querySelector("script[src*='maps.googleapis.com']");
-    if (existingScript) {
-      // If already loading, wait for it to load
-      existingScript.addEventListener("load", () => tryLoadScript(retryCount + 1));
-      return;
-    }
-
-    // Create the script element to load Google Maps API
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places`; // Make sure to use your own API key here
-    script.async = true;
-    script.defer = true;
-
-    // Attempt to load the script
-    script.onload = () => {
-      // Check if Maps API loaded correctly
-      if (window.google && window.google.maps && window.google.maps.places) {
-        callback(window.google.maps);
-      } else {
-        console.error("Google Maps API failed to load.");
-        setTimeout(() => tryLoadScript(retryCount + 1), 3000); // Retry after 3 seconds
-      }
-    };
-
-    script.onerror = () => {
-      console.error("Failed to load Google Maps script.");
-      setTimeout(() => tryLoadScript(retryCount + 1), 3000); // Retry on error
-    };
-
-    document.body.appendChild(script);
-  };
-
-  // Start loading the script and checking if it's ready
-  tryLoadScript();
-};
+import React, { useState, useEffect, useRef } from "react";
 
 const CreateAnnouncement = () => {
-  const [location, setLocation] = useState("");
-  const [error, setError] = useState(null);
-  const inputRef = useRef(null);
+    const inputRef = useRef(null);
 
-  useEffect(() => {
-    loadGoogleMaps((google) => {
-      if (!google || !google.maps || !google.maps.places) {
-        setError("Google Maps API is unavailable. Please try again later.");
-        return;
-      }
+    useEffect(() => {
+        if (!window.google) {
+            console.error("Google Maps API not loaded");
+            return;
+        }
 
-      if (inputRef.current) {
-        const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
-          types: ["geocode"],
-          componentRestrictions: { country: "us" },
-        });
+        const center = { lat: 50.064192, lng: -130.605469 };
+        const defaultBounds = {
+            north: center.lat + 0.1,
+            south: center.lat - 0.1,
+            east: center.lng + 0.1,
+            west: center.lng - 0.1,
+        };
 
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
-          if (place && place.formatted_address) {
-            setLocation(place.formatted_address);
-          }
-        });
-      }
-    });
-  }, []); // Empty dependency array to load only once
+        if (inputRef.current) {
+            const options = {
+                bounds: defaultBounds,
+                componentRestrictions: { country: "us" },
+                fields: ["address_components", "geometry", "icon", "name"],
+                strictBounds: false,
+            };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    alert(`Announcement created for location: ${location}`);
-  };
+            new window.google.maps.places.Autocomplete(inputRef.current, options);
+        }
+    }, []);
 
-  return (
-    <div>
-      <h2>Create Announcement</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Location:
-          <input
-            type="text"
-            ref={inputRef}
-            placeholder="Enter a location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  );
+    return <input id="pac-input" ref={inputRef} type="text" placeholder="Enter a location" />;
 };
 
 export default CreateAnnouncement;
 
 
 
-
+// var options = {
+//     types: ['(cities)']
+//   }
+  
+// var input1 = document.getElementById("from");
+// var autocomplete1 = new google.maps.places.Autocomplete(input1, options)
+  
 
 // import React, { useState, useEffect } from "react";
 
