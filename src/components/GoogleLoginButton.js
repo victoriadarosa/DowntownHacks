@@ -1,8 +1,20 @@
-import { useEffect, useRef } from "react";
-import jwtDecode from "jwt-decode";
+import React, { useEffect, useRef, useCallback } from "react";
+// import jwtDecode from 'jwt-decode';
+import * as jwtDecode from 'jwt-decode';
+// import jwtDecode from 'jwt-decode';
 
 const GoogleLoginButton = ({ onLoginSuccess }) => {
   const buttonRef = useRef(null);
+
+  const handleCredentialResponse = useCallback((response) => {
+    try {
+      const decodedToken = jwtDecode(response.credential);
+      console.log("User Info:", decodedToken);
+      onLoginSuccess(decodedToken);
+    } catch (error) {
+      console.error("JWT Decode Error:", error);
+    }
+  }, [onLoginSuccess]);
 
   useEffect(() => {
     const initializeGoogleSignIn = () => {
@@ -33,17 +45,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
       script.onload = initializeGoogleSignIn;
       document.body.appendChild(script);
     }
-  }, []);
-
-  const handleCredentialResponse = (response) => {
-    try {
-      const decodedToken = jwtDecode(response.credential);
-      console.log("User Info:", decodedToken);
-      onLoginSuccess(decodedToken);
-    } catch (error) {
-      console.error("JWT Decode Error:", error);
-    }
-  };
+  }, [handleCredentialResponse]); // Add handleCredentialResponse here
 
   return <div ref={buttonRef}></div>;
 };
