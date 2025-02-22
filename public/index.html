@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Board</title>
+</head>
+<body>
+    <script src="https://accounts.google.com/gsi/client" async></script>
+
+    <div id="g_id_onload"
+        data-client_id="522157024179-3et3elsqm7djosravtlcm11j5c7774vr.apps.googleusercontent.com"
+        data-auto-prompt="false">
+    </div>
+    <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-shape="rectangular"
+        data-logo_alignment="lefft">
+    </div>
+
+    <div id="g_id_onload"
+        data-client_id="522157024179-3et3elsqm7djosravtlcm11j5c7774vr.apps.googleusercontent.com"
+        data-callback="handleCredentialResponse">
+    </div>
+    <script>
+        function handleCredentialResponse(response) {
+            const responsePayLoad = decodeJwtResponse(response.credential);
+
+            console.log("ID: " + responsePayLoad.sub);
+            console.log('Full Name: ' + responsePayLoad.name);
+            console.log('Given Name: ' + responsePayLoad.given_name);
+            console.log('Family Name: ' + responsePayLoad.family_name);
+            console.log('Image URL: ' + responsePayLoad.picture);
+            console.log('Email: ' + responsePayLoad.email);
+        }
+    </script>
+</body>
+</html>
