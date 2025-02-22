@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CreateAnnouncement = () => {
     const inputRef = useRef(null);
+    const [eventName, setEventName] = useState("");
+    const [eventType, setEventType] = useState("");
+    const [location, setLocation] = useState("");
+    const [startTime, setStartTime] = useState(""); // Updated state for start time
+    const [endTime, setEndTime] = useState(""); // New state for end time
+    const [picture, setPicture] = useState(null);
+    const [description, setDescription] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!window.google) {
@@ -29,112 +38,105 @@ const CreateAnnouncement = () => {
         }
     }, []);
 
-    return <input id="pac-input" ref={inputRef} type="text" placeholder="Enter a location" />;
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Handle form submission logic here
+        console.log({
+            eventName,
+            eventType,
+            startTime,
+            endTime,
+            location,
+            picture,
+            description,
+        });
+
+        navigate("/home");
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Event Name:</label>
+                <input
+                    type="text"
+                    value={eventName}
+                    onChange={(e) => setEventName(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Event Type:</label>
+                <select
+                    value={eventType}
+                    onChange={(e) => setEventType(e.target.value)}
+                    required
+                >
+                    <option value="">Select event type</option>
+                    <option value="Safety Alerts">Safety Alerts</option>
+                    <option value="Local Events">Local Events</option>
+                    <option value="Outdoor Activities">Outdoor Activities</option>
+                    <option value="Volunteer">Volunteer</option>
+                    <option value="Health">Health</option>
+                    <option value="Family & Kids">Family & Kids</option>
+                    <option value="Networking">Networking</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Location:</label>
+                <input
+                    id="pac-input"
+                    ref={inputRef}
+                    type="text"
+                    placeholder="Enter a location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Start Time:</label>
+                <input
+                    type="datetime-local"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>End Time (Optional):</label>
+                <input
+                    type="datetime-local"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                />
+            </div>
+
+            <div>
+                <label>Picture (Optional):</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setPicture(e.target.files[0])}
+                />
+            </div>
+
+            <div>
+                <label>Description (Optional):</label>
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+            </div>
+
+            <button type="submit">Create Announcement</button>
+        </form>
+    );
 };
 
 export default CreateAnnouncement;
-
-
-
-// var options = {
-//     types: ['(cities)']
-//   }
-  
-// var input1 = document.getElementById("from");
-// var autocomplete1 = new google.maps.places.Autocomplete(input1, options)
-  
-
-// import React, { useState, useEffect } from "react";
-
-// const loadGooglePlaces = (callback) => {
-//   // Check if Google Maps API is already loaded
-//   if (window.google && window.google.maps && window.google.maps.places) {
-//     callback(window.google.maps);
-//     return;
-//   }
-
-//   // Check if the script is already in the DOM to avoid multiple loads
-//   if (document.querySelector("script[src*='maps.googleapis.com']")) {
-//     document
-//       .querySelector("script[src*='maps.googleapis.com']")
-//       .addEventListener("load", () => {
-//         if (window.google && window.google.maps && window.google.maps.places) {
-//           callback(window.google.maps);
-//         }
-//       });
-//     return;
-//   }
-
-//   // Create and load the Google Maps script
-//   const script = document.createElement("script");
-//   script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places`;
-//   script.async = true;
-//   script.defer = true;
-//   script.onload = () => {
-//     if (window.google && window.google.maps && window.google.maps.places) {
-//       callback(window.google.maps);
-//     } else {
-//       console.error("Google Maps API failed to load.");
-//     }
-//   };
-
-//   document.body.appendChild(script);
-// };
-
-// const CreateAnnouncement = () => {
-//   const [location, setLocation] = useState("");
-
-//   useEffect(() => {
-//     loadGooglePlaces((google) => {
-//       if (!google || !google.maps || !google.maps.places) {
-//         console.error("Google Maps API is not available.");
-//         return;
-//       }
-
-//       setTimeout(() => {
-//         const input = document.getElementById("location-input");
-//         if (!input) {
-//           console.error("Location input field not found.");
-//           return;
-//         }
-
-//         const autocomplete = new google.maps.places.Autocomplete(input, {
-//           types: ["geocode"],
-//         });
-
-//         autocomplete.addListener("place_changed", () => {
-//           const place = autocomplete.getPlace();
-//           if (place && place.formatted_address) {
-//             setLocation(place.formatted_address);
-//           }
-//         });
-//       }, 1000); // Adding a slight delay
-//     });
-//   }, []);
-
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     alert(`Announcement created for location: ${location}`);
-//   };
-
-//   return (
-//     <div>
-//       <h2>Create Announcement</h2>
-//       <form onSubmit={handleSubmit}>
-//         <label>
-//           Location:
-//           <input
-//             type="text"
-//             id="location-input"
-//             value={location}
-//             onChange={(e) => setLocation(e.target.value)}
-//             placeholder="Enter a location"
-//           />
-//         </label>
-//         <button type="submit">Submit</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default CreateAnnouncement;
