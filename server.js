@@ -1,15 +1,16 @@
-// server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const multer = require('multer'); // Import multer
+const upload = multer({ dest: 'uploads/' }); // Configure multer to store files in the 'uploads' directory
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // MongoDB Connection
 mongoose.connect('mongodb+srv://tuyendang486:dUgykBMiPEmQbLoL@communityboard.vvgkm.mongodb.net/communityboard?retryWrites=true&w=majority')
@@ -23,15 +24,30 @@ const announcementSchema = new mongoose.Schema({
     location: String,
     startTime: Date,
     endTime: Date,
-    picture: String, // You may want to handle file uploads differently
+    picture: String, // Store file path or URL
     description: String,
 });
 
 const Announcement = mongoose.model('Announcement', announcementSchema);
 
 // API Route to Create Announcement
-app.post('/api/announcements', async (req, res) => {
-    const newAnnouncement = new Announcement(req.body);
+app.post('/api/announcements', upload.single('picture'), async (req, res) => {
+    console.log("Received request body:", req.body); // Should now show the form fields
+    console.log("Received file:", req.file); // To see if the file is uploaded
+
+    const { eventName, eventType, location, startTime, endTime, description } = req.body;
+    const picturePath = req.file ? req.file.path : null; // Get file path
+
+    const newAnnouncement = new Announcement({
+        eventName,
+        eventType,
+        location,
+        startTime,
+        endTime,
+        description,
+        picture: picturePath, // Store the file path
+    });
+
     try {
         const savedAnnouncement = await newAnnouncement.save();
         res.status(201).json(savedAnnouncement);
