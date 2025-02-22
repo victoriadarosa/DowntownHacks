@@ -1,10 +1,10 @@
 import React from "react";
 
-const Home = () => {
+const Home = ({ user, onLogout }) => {
   return (
     <div>
-      <h2>Home Page!</h2>
-      {/* Additional content for the home page can go here */}
+      <h1>Welcome, {user.name}!</h1>
+      <button onClick={onLogout}>Logout</button>
     </div>
   );
 };

@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Board</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
+    <!-- Google Sign-In Button -->
     <div id="g_id_onload"
         data-client_id="522157024179-3et3elsqm7djosravtlcm11j5c7774vr.apps.googleusercontent.com"
-        data-auto-prompt="false">
+        data-auto_prompt="false"
+        data-callback="handleCredentialResponse">
     </div>
     
     <div class="g_id_signin"
@@ -20,22 +23,32 @@
         data-logo_alignment="left">
     </div>
 
-    <!-- This is where your React application will be mounted -->
+    <!-- React root element -->
     <div id="root"></div> 
 
-    <!-- Load Google Sign-In script at the end -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Handle Google Sign-In response -->
+    <script>
+        function handleCredentialResponse(response) {
+            const responsePayload = decodeJwtResponse(response.credential);
+            console.log("User Info:", responsePayload);
+
+            // Send user data to React via a custom event
+            window.dispatchEvent(new CustomEvent("google-login", { detail: responsePayload }));
+        }
+
+        function decodeJwtResponse(token) {
+            try {
+                return JSON.parse(atob(token.split(".")[1])); // Decode the JWT payload
+            } catch (e) {
+                console.error("Failed to parse JWT:", e);
+                return null;
+            }
+        }
+    </script>
 
     <script>
         function handleCredentialResponse(response) {
-            const responsePayLoad = decodeJwtResponse(response.credential);
-
-            console.log("ID: " + responsePayLoad.sub);
-            console.log('Full Name: ' + responsePayLoad.name);
-            console.log('Given Name: ' + responsePayLoad.given_name);
-            console.log('Family Name: ' + responsePayLoad.family_name);
-            console.log('Image URL: ' + responsePayLoad.picture);
-            console.log('Email: ' + responsePayLoad.email);
+            window.dispatchEvent(new CustomEvent("google-login", { detail: response }));
         }
     </script>
 </body>

@@ -1,70 +1,74 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from "./components/Home";
-
-const LoginPage = ({ setUser }) => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      navigate("/home");
-    }
-  }, [setUser, navigate]);
-
-  // Function to handle Google login manually
-  const handleGoogleLogin = async () => {
-    try {
-      const googleAuth = window.google?.accounts?.oauth2;
-      if (!googleAuth) {
-        console.error("Google Auth API not loaded.");
-        return;
-      }
-
-      // Trigger Google login
-      const response = await googleAuth.initTokenClient({
-        client_id: "YOUR_GOOGLE_CLIENT_ID",
-        scope: "profile email",
-        callback: (response) => {
-          if (response.access_token) {
-            fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-              headers: { Authorization: `Bearer ${response.access_token}` },
-            })
-              .then((res) => res.json())
-              .then((userInfo) => {
-                setUser(userInfo);
-                localStorage.setItem("user", JSON.stringify(userInfo));
-                navigate("/home"); // Redirect to home page
-              });
-          }
-        },
-      });
-
-      response.requestAccessToken();
-    } catch (error) {
-      console.error("Google login failed:", error);
-    }
-  };
-
-  return (
-    <div>
-      <h1>Google Login</h1>
-      <button onClick={handleGoogleLogin}>Login with Google</button>
-    </div>
-  );
-};
 
 const App = () => {
   const [user, setUser] = useState(() => {
-    return JSON.parse(localStorage.getItem("user")) || null;
+    // Retrieve user from session storage if available
+    const savedUser = sessionStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
   });
+
+  useEffect(() => {
+    const handleGoogleLogin = (event) => {
+      const { credential } = event.detail;
+      const userInfo = parseJwt(credential);
+      if (userInfo) {
+        setUser(userInfo);
+        sessionStorage.setItem("user", JSON.stringify(userInfo)); // Persist user session
+      }
+    };
+
+    window.addEventListener("google-login", handleGoogleLogin);
+
+    return () => {
+      window.removeEventListener("google-login", handleGoogleLogin);
+    };
+  }, []);
+
+  // Function to decode Google JWT token
+  const parseJwt = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    sessionStorage.removeItem("user"); // Clear session on logout
+  };
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage setUser={setUser} />} />
-        <Route path="/home" element={user ? <Home /> : <Navigate to="/" />} />
+        <Route
+          path="/"
+          element={
+            !user ? (
+              <div>
+                <h1>Google Login</h1>
+                <div className="g_id_signin"
+                  data-type="standard"
+                  data-size="large"
+                  data-theme="outline"
+                  data-text="sign_in_with"
+                  data-shape="rectangular"
+                  data-logo_alignment="left">
+                </div>
+              </div>
+            ) : (
+              <Navigate to="/home" />
+            )
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            user ? <Home user={user} onLogout={handleLogout} /> : <Navigate to="/" />
+          }
+        />
       </Routes>
     </Router>
   );
