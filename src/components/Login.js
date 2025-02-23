@@ -32,9 +32,9 @@ const Login = ({ setUser }) => {
 
   return (
     <div className="login-container">
-      <h1>Community Board</h1>
-      <p> A digital notice board </p>
-      <p> Post and discover local events, volunteer opportunities, and neighborhood news. </p>
+      <h1 className="login-header">Community Board</h1>
+      <p className="login-paragraph"> A digital notice board </p>
+      <p className="login-paragraph"> Post and discover local events, volunteer opportunities, and neighborhood news. </p>
       <div
         className="g_id_signin"
         data-type="standard"

@@ -13,13 +13,13 @@
     background-color: #CAA478
   }
   
-  h1 {
+  .login-header {
     margin-bottom: 4px;
     color: whitesmoke;
     font-size: 100;
   }
 
-  p {
+  .login-paragraph {
     margin-bottom: 20px;
     color: #F6E2B9;
   }
