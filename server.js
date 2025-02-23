@@ -32,7 +32,7 @@ const Announcement = mongoose.model("Announcement", announcementSchema);
 
 app.post("/api/announcements", multer().none(), async (req, res) => {
   console.log("Received request body:", req.body);
-  console.log("Received file:", req.file); // Should be undefined since there is no file
+  console.log("Received file:", req.file);
 
   const { eventName, eventType, location, startTime, endTime, description, latitude, longitude } = req.body;
 
@@ -61,7 +61,7 @@ app.post("/api/announcements", multer().none(), async (req, res) => {
 
 const haversineDistance = (lat1, lon1, lat2, lon2) => {
     const toRadians = (degrees) => degrees * (Math.PI / 180);
-    const R = 6371; // Earth's radius in kilometers
+    const R = 6371;
     const dLat = toRadians(lat2 - lat1);
     const dLon = toRadians(lon2 - lon1);
     const a =
@@ -69,7 +69,7 @@ const haversineDistance = (lat1, lon1, lat2, lon2) => {
       Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c * 0.621371; // Convert to miles
+    return R * c * 0.621371;
   };
   
   app.get("/api/announcements", async (req, res) => {
@@ -91,7 +91,7 @@ const haversineDistance = (lat1, lon1, lat2, lon2) => {
         const userLon = parseFloat(longitude);
         const filteredAnnouncements = announcements.filter(announcement => {
           const distance = haversineDistance(userLat, userLon, announcement.latitude, announcement.longitude);
-          return distance <= 100; // Filter announcements within 100 miles
+          return distance <= 100;
         });
         res.status(200).json(filteredAnnouncements);
       } else {

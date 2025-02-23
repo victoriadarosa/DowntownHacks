@@ -13,20 +13,19 @@ const Home = ({ user, onLogout, userLocation }) => {
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [reportReason, setReportReason] = useState("");
-  const [userCity, setUserCity] = useState(""); // State to store the user's city
+  const [userCity, setUserCity] = useState("");
   const navigate = useNavigate();
 
-  // Fetch the user's city location when the component mounts or when userLocation changes
   useEffect(() => {
     if (userLocation) {
       const fetchUserCity = async () => {
         try {
           const address = await fetchLocationAddress(userLocation.latitude, userLocation.longitude);
-          setUserCity(address.city || address.locality || "Your Location"); // Fallback if city is not available
+          setUserCity(address.city || address.locality || "Your Location");
           console.log("City: ", address.city);
         } catch (error) {
           console.error("Failed to fetch user city:", error);
-          setUserCity("Your Location"); // Fallback in case of error
+          setUserCity("Your Location");
         }
       };
       fetchUserCity();
@@ -46,15 +45,14 @@ const Home = ({ user, onLogout, userLocation }) => {
   
           const now = new Date();
   
-          // Filter announcements
           const filteredData = data.filter((announcement) => {
             const startTime = new Date(announcement.startTime);
             const endTime = announcement.endTime ? new Date(announcement.endTime) : null;
   
             if (endTime) {
-              return endTime > now; // Keep if event has not ended
+              return endTime > now;
             } else {
-              return now - startTime <= 24 * 60 * 60 * 1000; // Keep if within 24 hours of start
+              return now - startTime <= 24 * 60 * 60 * 1000;
             }
           });
   
@@ -69,8 +67,6 @@ const Home = ({ user, onLogout, userLocation }) => {
     }
   }, [filters, userLocation]);
   
-
-  // Fetch location addresses for announcements
   const fetchLocations = async (announcements) => {
     const newLocations = {};
     for (const announcement of announcements) {

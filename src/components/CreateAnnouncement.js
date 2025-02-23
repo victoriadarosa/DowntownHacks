@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"; // Add useEffect here
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAnnouncement } from "../utils/api"
 

@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import Map from "./components/Map";
-import CreateAnnouncement from "./components/CreateAnnouncement"; // Import CreateAnnouncement component
-import axios from "axios"; // Import axios for HTTP requests
+import CreateAnnouncement from "./components/CreateAnnouncement";
+import axios from "axios";
 
 const App = () => {
   const [user, setUser] = useState(() => {
-    // Retrieve user from session storage if available
     const savedUser = sessionStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  const [announcements, setAnnouncements] = useState([]); // State for announcements
-  const [userLocation, setUserLocation] = useState(null); // State for user location
+  const [announcements, setAnnouncements] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => {
     const handleGoogleLogin = (event) => {
@@ -20,7 +19,7 @@ const App = () => {
       const userInfo = parseJwt(credential);
       if (userInfo) {
         setUser(userInfo);
-        sessionStorage.setItem("user", JSON.stringify(userInfo)); // Persist user session
+        sessionStorage.setItem("user", JSON.stringify(userInfo));
       }
     };
 
@@ -31,10 +30,9 @@ const App = () => {
     };
   }, []);
 
-  // Function to decode Google JWT token
   const parseJwt = (token) => {
     try {
-      return JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+      return JSON.parse(atob(token.split(".")[1]));
     } catch (e) {
       return null;
     }
@@ -42,20 +40,18 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null);
-    sessionStorage.removeItem("user"); // Clear session on logout
+    sessionStorage.removeItem("user");
   };
 
-  // Fetch announcements
   const fetchAnnouncements = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/api/announcements"); // Adjust the URL as needed
+      const response = await axios.get("http://localhost:5001/api/announcements");
       setAnnouncements(response.data);
     } catch (error) {
       console.error("Error fetching announcements:", error);
     }
   };
 
-  // Fetch user location
   const fetchUserLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       setUserLocation({
@@ -67,8 +63,8 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      fetchAnnouncements(); // Fetch announcements when user is logged in
-      fetchUserLocation(); // Fetch user location when user is logged in
+      fetchAnnouncements();
+      fetchUserLocation();
     }
   }, [user]);
 
@@ -109,8 +105,8 @@ const App = () => {
           element={
             user ? (
               <Map 
-                announcements={announcements} // Pass fetched announcements
-                userLocation={userLocation} // Pass user location here
+                announcements={announcements}
+                userLocation={userLocation}
               />
             ) : (
               <Navigate to="/" />
