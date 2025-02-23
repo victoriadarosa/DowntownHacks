@@ -18,7 +18,6 @@ const AnnouncementList = ({ announcements, locations, onReportClick }) => {
             {new Date(announcement.startTime).toLocaleString()}
             {announcement.endTime ? ` - ${new Date(announcement.endTime).toLocaleString()}` : ""}
           </p>
-          {announcement.picture && <img src={announcement.picture} alt="event" width={100} />}
           <p>{announcement.description}</p>
           <button onClick={() => onReportClick(announcement)}>Report</button>
         </li>
