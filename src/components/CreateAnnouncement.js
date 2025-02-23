@@ -11,6 +11,7 @@ const CreateAnnouncement = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +51,16 @@ const CreateAnnouncement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setError("");
+
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    if (endTime && end < start) {
+      setError("End time cannot be before start time.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("eventName", eventName);
@@ -123,6 +134,9 @@ const CreateAnnouncement = () => {
               onChange={(e) => setEndTime(e.target.value)}
             />
           </div>
+
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+
           <div className={styles.formGroup}>
             <label>Description (Optional):</label>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
