@@ -7,8 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 app.use(cors());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const upload = multer({ dest: "uploads/" });
 
@@ -30,14 +30,14 @@ const announcementSchema = new mongoose.Schema({
 
 const Announcement = mongoose.model("Announcement", announcementSchema);
 
-app.post("/api/announcements", async (req, res) => {
+app.post("/api/announcements", multer().none(), async (req, res) => {
   console.log("Received request body:", req.body);
-  console.log("Received file:", req.file);
+  console.log("Received file:", req.file); // Should be undefined since there is no file
 
   const { eventName, eventType, location, startTime, endTime, description, latitude, longitude } = req.body;
 
-  if (isNaN(latitude) || isNaN(longitude)) {
-    return res.status(400).json({ message: "Invalid latitude or longitude" });
+  if (!eventName || !eventType || !startTime || isNaN(latitude) || isNaN(longitude)) {
+    return res.status(400).json({ message: "Missing or invalid required fields" });
   }
 
   const newAnnouncement = new Announcement({
@@ -45,7 +45,7 @@ app.post("/api/announcements", async (req, res) => {
     eventType,
     location,
     startTime: new Date(startTime),
-    endTime: new Date(endTime),
+    endTime: endTime ? new Date(endTime) : null,
     description,
     latitude: parseFloat(latitude),
     longitude: parseFloat(longitude),
