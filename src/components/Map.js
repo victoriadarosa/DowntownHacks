@@ -4,7 +4,6 @@ import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
 const Map = ({ announcements, userLocation }) => {
     const mapRef = useRef(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (!window.google) {
@@ -56,9 +55,7 @@ const Map = ({ announcements, userLocation }) => {
             position: center,
             title: "Your Location",
             icon: {
-                //<a href="https://www.flaticon.com/free-icons/map-marker" title="map marker icons">Map marker icons created by gungyoga04 - Flaticon</a>
-                // url: "https://www.flaticon.com/free-icons/map-marker", //blue marker icon
-                url: "/images/user.png",
+                url: "/images/user.png", //blue marker icon
                 scaledSize: new window.google.maps.Size(40, 40),
             },
             map,
@@ -94,17 +91,10 @@ const Map = ({ announcements, userLocation }) => {
 
     return (
         <div>
-            <button 
-                onClick={() => navigate("/")} 
-                style={{ margin: "10px", padding: "8px 12px", cursor: "pointer" }}
-            >
-                Back
-            </button>
+            {/* Remove the Back button */}
             <div ref={mapRef} style={{ height: "500px", width: "100%" }} />
         </div>
     );
 };
 
 export default Map;
-
-

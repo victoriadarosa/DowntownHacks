@@ -2,16 +2,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full viewport height */
-    background-color: #f4f4f4; /* Light background */
+    height: 100vh;
+    background-color: #deba91;
+    font-family: Arial, sans-serif;
   }
   
   .formBox {
-    background-color: #fff;
-    padding: 30px;
+    background-color: #fee9e7;
+    padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 600px;
     text-align: center;
   }
   
@@ -62,7 +63,7 @@
   }
   
   .submitButton {
-    background-color: #4CAF50;
+    background-color: #568c3d;
     color: white;
   }
   
@@ -76,6 +77,6 @@
   }
   
   .backButton:hover {
-    background-color: #bbb;
+    background-color: #c3deb6;
   }
   

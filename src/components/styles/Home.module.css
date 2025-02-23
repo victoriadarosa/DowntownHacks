@@ -1,8 +1,13 @@
+body {
+  background-color: #deba91;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
+    background-color: #deba91;
   }
   
   .header {
@@ -10,6 +15,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+    color: #362817;
   }
   
   .title {
@@ -46,8 +52,70 @@
     padding: 20px;
     border-radius: 5px;
     margin-bottom: 30px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background-color: #F6E2B9;
   }
   
+  .filterSection h2 {
+    margin: 0; 
+  }
+  
+  .filterOptions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .filterSelect {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f7f7f7;
+    color: #333;
+    width: 220px;
+    transition: background-color 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  
+  .filterSelect:hover {
+    background-color: #e6e6e6;
+  }
+  
+  .filterSelect:focus {
+    outline: none;
+    border-color: #ebc2c6; /* Focus border color */
+    background-color: #fff;
+  }
+  
+  .filterDatetime {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f7f7f7;
+    color: #333;
+    width: 220px;
+    transition: background-color 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  
+  .filterDatetime:hover {
+    background-color: #e6e6e6;
+  }
+  
+  .filterDatetime:focus {
+    outline: none;
+    border-color: #ebc2c6; /* Focus border color */
+    background-color: #fff;
+  }
+
+
   .filterTitle {
     font-size: 20px;
     margin-bottom: 15px;
@@ -77,7 +145,7 @@
   }
   
   .filterButton {
-    background-color: #28a745;
+    background-color: #568c3d;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -88,7 +156,7 @@
   }
   
   .filterButton:hover {
-    background-color: #218838;
+    background-color: #45a049;
   }
   
   .announcementGrid {
@@ -99,11 +167,48 @@
   }
   
   .announcementCard {
+    position: relative;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 15px;
+    padding: 10px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
   }
+
+  .reportFlag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 16px; 
+    color: rgb(87, 29, 29);
+  }
   
+  .reportFlag:hover {
+    color: #a43333; 
+  }
+
+  .announcementDescription {
+    font-style: italic;
+    font-size: 16px;
+    color: #2c2929; 
+  }
+
+  .announcementDate {
+    font-size: 16px; 
+    color: #2c2929; 
+  }
+  
+  .reportFlag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 16px; 
+    color: rgb(87, 29, 29);
+  }
+  
+  .reportFlag:hover {
+    color: #a43333;
+  }

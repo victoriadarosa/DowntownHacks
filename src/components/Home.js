@@ -119,46 +119,30 @@ const Home = ({ user, onLogout, userLocation }) => {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Welcome, {user.name}!</h1>
-        <button onClick={onLogout}>Logout</button>
-        <button onClick={() => navigate("/create-announcement")}>Create Announcement</button>
-        <button onClick={() => navigate("/map")}>Map</button>
-      </header>
-
+      {/* Display user's city location alongside the Announcements heading */}
+      <h1 className={styles.header}>
+        <span>Announcements Near You</span>
+      </h1>
       {/* Filter Form */}
       <div>
-        <h2>Filter Announcements</h2>
-        <div>
-          <label>Event Type:</label>
-          <select name="eventType" value={filters.eventType} onChange={handleFilterChange}>
-            <option value="All">All</option>
-            <option value="Safety Alerts">Safety Alerts</option>
-            <option value="Local Events">Local Events</option>
-            <option value="Outdoor Activities">Outdoor Activities</option>
-            <option value="Volunteer">Volunteer</option>
-            <option value="Health">Health</option>
-            <option value="Family & Kids">Family & Kids</option>
-            <option value="Networking">Networking</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div>
-          <label>Events Starting At or Later:</label>
-          <input
-            type="datetime-local"
-            name="startTime"
-            value={filters.startTime}
-            onChange={handleFilterChange}
-          />
-        </div>
-        <button onClick={handleFilterSubmit}>Filter</button>
-      </div>
-
-      {/* Display user's city location alongside the Announcements heading */}
-      <h1>
-        Announcements {userCity && <span>(Near {userCity})</span>}
-      </h1>
+      <div className={styles.filterSection}>
+        <h2 className={styles.header}>Filter: </h2>
+        <label>Event Type:</label>
+        <select className={styles.filterSelect} name="eventType" value={filters.eventType} onChange={handleFilterChange}>
+          <option value="All">All</option>
+          <option value="Safety Alerts">Safety Alerts</option>
+          <option value="Local Events">Local Events</option>
+          <option value="Outdoor Activities">Outdoor Activities</option>
+          <option value="Volunteer">Volunteer</option>
+          <option value="Health">Health</option>
+          <option value="Family & Kids">Family & Kids</option>
+          <option value="Networking">Networking</option>
+          <option value="Other">Other</option>
+        </select>
+        <label>Events Starting At or Later:</label>
+        <input className={styles.filterDatetime} type="datetime-local" name="startTime" value={filters.startTime} onChange={handleFilterChange} />
+        <button className={styles.filterButton}onClick={handleFilterSubmit}>Go</button>
+      </div> </div>
 
       {/* Announcement List */}
       <AnnouncementList
