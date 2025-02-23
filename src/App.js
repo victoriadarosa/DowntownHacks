@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import Map from "./components/Map";
-import CreateAnnouncement from "./components/CreateAnnouncement";
-import axios from "axios";
+import CreateAnnouncement from "./components/CreateAnnouncement"; 
+import axios from "axios"; 
+import NavBar from "./components/Navbar";
 
 const App = () => {
+  
   const [user, setUser] = useState(() => {
     const savedUser = sessionStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
@@ -70,6 +72,7 @@ const App = () => {
 
   return (
     <Router>
+      {user && <NavBar />} {/* Show NavBaronly when user is logged in */}
       <Routes>
         <Route
           path="/"
