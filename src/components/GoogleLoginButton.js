@@ -45,7 +45,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
       script.onload = initializeGoogleSignIn;
       document.body.appendChild(script);
     }
-  }, [handleCredentialResponse]); // Add handleCredentialResponse here
+  }, [handleCredentialResponse]);
 
   return <div ref={buttonRef}></div>;
 };
