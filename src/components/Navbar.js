@@ -5,7 +5,7 @@ import "../index.css";
 const NavBar = ({user, onLogout}) => {
     return (
         <nav className="nav">
-            <NavLink to="/home" className="site-title">Home</NavLink>
+            <NavLink to="/home" className="site-title">Buzz Board</NavLink>
             <ul>
                 <li>
                     <NavLink to="/create-announcement" className={({ isActive }) => isActive ? "active" : ""}>

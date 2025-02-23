@@ -32,7 +32,7 @@ const Login = ({ setUser }) => {
 
   return (
     <div className="login-container">
-      <h1 className="login-header">Community Board</h1>
+      <h1 className="login-header">Buzz Board</h1>
       <h3 className="login-h3">Stay Updated, Stay Engaged.</h3>
       <div
         className="g_id_signin"
