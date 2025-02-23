@@ -1,3 +1,7 @@
+/* body {
+  background-color: #CAA478
+} */
+
 .login-container {
     display: flex;
     flex-direction: column;
@@ -5,10 +9,19 @@
     justify-content: center;
     height: 100vh;
     text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #CAA478
   }
   
   h1 {
+    margin-bottom: 4px;
+    color: whitesmoke;
+    font-size: 100;
+  }
+
+  p {
     margin-bottom: 20px;
+    color: #F6E2B9;
   }
   
   .g_id_signin {
