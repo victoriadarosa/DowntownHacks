@@ -41,7 +41,7 @@ const CreateAnnouncement = () => {
                 if (place && place.geometry) {
                     const lat = place.geometry.location.lat();
                     const lng = place.geometry.location.lng();
-                    setLocation({ lat, lng }); // Store the latitude and longitude in state
+                    setLocation({ lat, lng });
                 }
             });
         }
@@ -53,8 +53,8 @@ const CreateAnnouncement = () => {
         const formData = new FormData();
         formData.append("eventName", eventName);
         formData.append("eventType", eventType);
-        formData.append("latitude", location.lat); // Use the stored latitude
-        formData.append("longitude", location.lng); // Use the stored longitude
+        formData.append("latitude", location.lat); 
+        formData.append("longitude", location.lng); 
         formData.append("startTime", startTime);
     
         if (endTime) {
@@ -128,7 +128,6 @@ const CreateAnnouncement = () => {
                     ref={inputRef}
                     type="text"
                     placeholder="Enter a location"
-                    // Remove value={location.address} as we don't have address in state
                     required
                     style={{ width: '400px', maxWidth: '100%' }}
                 />

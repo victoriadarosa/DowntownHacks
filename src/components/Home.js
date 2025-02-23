@@ -4,6 +4,7 @@ import axios from "axios";
 
 const Home = ({ user, onLogout }) => {
   const [announcements, setAnnouncements] = useState([]);
+  const [locations, setLocations] = useState({});
   const [filters, setFilters] = useState({
     eventType: "",
     startTime: "",
@@ -20,13 +21,41 @@ const Home = ({ user, onLogout }) => {
   const fetchAnnouncements = () => {
     axios
       .get("http://localhost:5001/api/announcements")
-      .then((response) => {
+      .then(async (response) => {
         setAnnouncements(response.data);
+        fetchLocations(response.data);
       })
       .catch((error) => {
         console.error("Error fetching announcements:", error);
       });
   };
+
+  const fetchLocations = async (announcements) => {
+    const newLocations = {};
+    const apiKey = "AIzaSyBaj1qQzL-Q9bTdWS_15_Cxr_3EYxGVU2A";
+  
+    for (const announcement of announcements) {
+      if (announcement.longitude && announcement.latitude) {
+        try {
+          const response = await axios.get(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${announcement.latitude},${announcement.longitude}&key=${apiKey}`
+          );
+  
+          if (response.data.results.length > 0) {
+            newLocations[announcement._id] = response.data.results[0].formatted_address;
+          } else {
+            newLocations[announcement._id] = "Unknown location";
+          }
+        } catch (error) {
+          console.error("Error fetching location:", error);
+          newLocations[announcement._id] = "Location not found";
+        }
+      }
+    }
+  
+    setLocations(newLocations);
+  };
+  
 
   const handleCreateAnnouncement = () => {
     navigate("/create-announcement");
@@ -50,16 +79,16 @@ const Home = ({ user, onLogout }) => {
       return;
     }
 
-    // If 'All' is selected for eventType, we don't need to include it in the filters
     const updatedFilters = { ...filters };
     if (updatedFilters.eventType === "All") {
-      delete updatedFilters.eventType; // Exclude eventType filter
+      delete updatedFilters.eventType;
     }
 
     axios
       .get("http://localhost:5001/api/announcements", { params: updatedFilters })
       .then((response) => {
         setAnnouncements(response.data);
+        fetchLocations(response.data);
       })
       .catch((error) => {
         console.error("Error fetching filtered announcements:", error);
@@ -74,7 +103,6 @@ const Home = ({ user, onLogout }) => {
   const handleReportSubmit = () => {
     console.log(`Reported Announcement ID: ${selectedAnnouncement._id}`);
     console.log(`Reason: ${reportReason}`);
-    // Here you can also add any functionality to handle the report (e.g., send to backend).
     setReportModalVisible(false);
   };
 
@@ -83,7 +111,7 @@ const Home = ({ user, onLogout }) => {
       <h1>Welcome, {user.name}!</h1>
       <button onClick={onLogout}>Logout</button>
       <button onClick={handleCreateAnnouncement}>Create Announcement</button>
-      <button onClick={handleMapView}>Map</button> {/* Map Button */}
+      <button onClick={handleMapView}>Map</button>
 
       {/* Filter Form */}
       <div>
@@ -123,14 +151,13 @@ const Home = ({ user, onLogout }) => {
               <h3>{announcement.eventName}</h3>
               <p>{announcement.eventType}</p>
               <p>{announcement.location}</p>
+              <p>📍 {locations[announcement._id] || "Fetching location..."}</p>
               <p>
-                {new Date(announcement.startTime).toLocaleString()} -{" "}
-                {new Date(announcement.endTime).toLocaleString()}
+                {new Date(announcement.startTime).toLocaleString()}
+                {announcement.endTime ? ` - ${new Date(announcement.endTime).toLocaleString()}` : ""}
               </p>
               {announcement.picture && <img src={announcement.picture} alt="event" width={100} />}
               <p>{announcement.description}</p>
-
-              {/* Report Button */}
               <button onClick={() => handleReportClick(announcement)}>Report</button>
             </li>
           ))}

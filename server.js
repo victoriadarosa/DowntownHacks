@@ -6,20 +6,17 @@ const multer = require("multer");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Middleware
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const upload = multer({ dest: "uploads/" });
 
-// MongoDB Connection
 mongoose
   .connect("mongodb+srv://tuyendang486:dUgykBMiPEmQbLoL@communityboard.vvgkm.mongodb.net/communityboard?retryWrites=true&w=majority")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// Announcement Schema
 const announcementSchema = new mongoose.Schema({
   eventName: String,
   eventType: String,
@@ -33,7 +30,6 @@ const announcementSchema = new mongoose.Schema({
 
 const Announcement = mongoose.model("Announcement", announcementSchema);
 
-// Create Announcement API
 app.post("/api/announcements", async (req, res) => {
   console.log("Received request body:", req.body);
   console.log("Received file:", req.file);
@@ -71,7 +67,6 @@ app.get("/api/announcements", async (req, res) => {
       if (eventType) {
         filterQuery.eventType = eventType;
       }
-      // Ensure that startTime and endTime are valid Date objects
       if (startTime) {
         filterQuery.startTime = { $gte: new Date(startTime) };
       }
@@ -83,7 +78,6 @@ app.get("/api/announcements", async (req, res) => {
     }
   });
   
-// Start Server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
