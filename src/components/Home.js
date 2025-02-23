@@ -37,6 +37,10 @@ const Home = ({ user, onLogout }) => {
     navigate("/create-announcement");
   };
 
+  const handleMapView = () => {
+    navigate("/map");
+  };
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prevFilters) => ({
@@ -50,6 +54,7 @@ const Home = ({ user, onLogout }) => {
       <h1>Welcome, {user.name}!</h1>
       <button onClick={onLogout}>Logout</button>
       <button onClick={handleCreateAnnouncement}>Create Announcement</button>
+      <button onClick={handleMapView}>Map</button> {/* Map Button */}
 
       {/* Filter Form */}
       <div>

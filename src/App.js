@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from "./components/Home";
+import Map from "./components/Map";
 import CreateAnnouncement from "./components/CreateAnnouncement"; // Import CreateAnnouncement component
+import axios from "axios"; // Import axios for HTTP requests
 
 const App = () => {
   const [user, setUser] = useState(() => {
@@ -9,6 +11,8 @@ const App = () => {
     const savedUser = sessionStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  const [announcements, setAnnouncements] = useState([]); // State for announcements
+  const [userLocation, setUserLocation] = useState(null); // State for user location
 
   useEffect(() => {
     const handleGoogleLogin = (event) => {
@@ -41,6 +45,33 @@ const App = () => {
     sessionStorage.removeItem("user"); // Clear session on logout
   };
 
+  // Fetch announcements
+  const fetchAnnouncements = async () => {
+    try {
+      const response = await axios.get("http://localhost:5001/api/announcements"); // Adjust the URL as needed
+      setAnnouncements(response.data);
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
+    }
+  };
+
+  // Fetch user location
+  const fetchUserLocation = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setUserLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchAnnouncements(); // Fetch announcements when user is logged in
+      fetchUserLocation(); // Fetch user location when user is logged in
+    }
+  }, [user]);
+
   return (
     <Router>
       <Routes>
@@ -72,6 +103,19 @@ const App = () => {
         <Route
           path="/create-announcement"
           element={user ? <CreateAnnouncement /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/map"
+          element={
+            user ? (
+              <Map 
+                announcements={announcements} // Pass fetched announcements
+                userLocation={userLocation} // Pass user location here
+              />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
       </Routes>
     </Router>
