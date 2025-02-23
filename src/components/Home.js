@@ -9,7 +9,7 @@ import styles from "./styles/Home.module.css";
 const Home = ({ user, onLogout, userLocation }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [locations, setLocations] = useState({});
-  const [filters, setFilters] = useState({ eventType: "", startTime: "" });
+  const [filters, setFilters] = useState({ eventType: "All", startTime: "" });
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [reportReason, setReportReason] = useState("");
@@ -22,7 +22,6 @@ const Home = ({ user, onLogout, userLocation }) => {
         try {
           const address = await fetchLocationAddress(userLocation.latitude, userLocation.longitude);
           setUserCity(address.city || address.locality || "Your Location");
-          // console.log("City: ", address.city);
         } catch (error) {
           console.error("Failed to fetch user city:", error);
           setUserCity("Your Location");
@@ -36,40 +35,42 @@ const Home = ({ user, onLogout, userLocation }) => {
     if (userLocation) {
       const fetchData = async () => {
         try {
-          const data = await fetchAnnouncements({
-            ...filters,
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-          });
-  
+          // Remove filters for 'All' eventType
+          const filtersToApply = { ...filters, latitude: userLocation.latitude, longitude: userLocation.longitude };
+          if (filtersToApply.eventType === "All") {
+            delete filtersToApply.eventType;
+          }
+
+          const data = await fetchAnnouncements(filtersToApply);
+
           const now = new Date();
-  
+
           const filteredData = data.filter((announcement) => {
             const startTime = new Date(announcement.startTime);
             const endTime = announcement.endTime ? new Date(announcement.endTime) : null;
-  
+
             if (endTime) {
               return endTime > now;
             } else {
               return now - startTime <= 24 * 60 * 60 * 1000;
             }
           });
-  
+
           const sortedAnnouncements = filteredData.sort((a, b) => {
             return new Date(a.startTime) - new Date(b.startTime);
           });
-  
+
           setAnnouncements(sortedAnnouncements);
           fetchLocations(sortedAnnouncements);
         } catch (error) {
           console.error("Failed to fetch announcements:", error);
         }
       };
-  
+
       fetchData();
     }
   }, [filters, userLocation]);
-  
+
   const fetchLocations = async (announcements) => {
     const newLocations = {};
     for (const announcement of announcements) {
@@ -96,11 +97,14 @@ const Home = ({ user, onLogout, userLocation }) => {
       alert("Please fill at least one filter to apply.");
       return;
     }
-    fetchAnnouncements({
-      ...filters,
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
-    }).then((data) => {
+
+    const filtersToApply = { ...filters, latitude: userLocation.latitude, longitude: userLocation.longitude };
+
+    if (filtersToApply.eventType === "All") {
+      delete filtersToApply.eventType; // Remove 'eventType' if "All" is selected
+    }
+
+    fetchAnnouncements(filtersToApply).then((data) => {
       setAnnouncements(data);
       fetchLocations(data);
     });
@@ -123,8 +127,8 @@ const Home = ({ user, onLogout, userLocation }) => {
       <h1 className={styles.header}>
         <span>Announcements Near You</span>
       </h1>
+      
       {/* Filter Form */}
-      <div>
       <div className={styles.filterSection}>
         <h2 className={styles.header}>Filter: </h2>
         <label>Event Type:</label>
@@ -141,8 +145,8 @@ const Home = ({ user, onLogout, userLocation }) => {
         </select>
         <label>Events Starting At or Later:</label>
         <input className={styles.filterDatetime} type="datetime-local" name="startTime" value={filters.startTime} onChange={handleFilterChange} />
-        <button className={styles.filterButton}onClick={handleFilterSubmit}>Go</button>
-      </div> </div>
+        <button className={styles.filterButton} onClick={handleFilterSubmit}>Go</button>
+      </div>
 
       {/* Announcement List */}
       <AnnouncementList
