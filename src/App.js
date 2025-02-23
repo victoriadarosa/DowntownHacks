@@ -98,7 +98,7 @@ const App = () => {
         />
         <Route
           path="/home"
-          element={user ? <Home user={user} onLogout={handleLogout} /> : <Navigate to="/" />}
+          element={user ? <Home user={user} onLogout={handleLogout} userLocation={userLocation} /> : <Navigate to="/" />}
         />
         <Route
           path="/create-announcement"

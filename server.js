@@ -59,9 +59,22 @@ app.post("/api/announcements", async (req, res) => {
   }
 });
 
-app.get("/api/announcements", async (req, res) => {
+const haversineDistance = (lat1, lon1, lat2, lon2) => {
+    const toRadians = (degrees) => degrees * (Math.PI / 180);
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c * 0.621371; // Convert to miles
+  };
+  
+  app.get("/api/announcements", async (req, res) => {
     try {
-      const { eventType, startTime } = req.query;
+      const { eventType, startTime, latitude, longitude } = req.query;
       let filterQuery = {};
   
       if (eventType) {
@@ -72,7 +85,18 @@ app.get("/api/announcements", async (req, res) => {
       }
   
       const announcements = await Announcement.find(filterQuery);
-      res.status(200).json(announcements);
+  
+      if (latitude && longitude) {
+        const userLat = parseFloat(latitude);
+        const userLon = parseFloat(longitude);
+        const filteredAnnouncements = announcements.filter(announcement => {
+          const distance = haversineDistance(userLat, userLon, announcement.latitude, announcement.longitude);
+          return distance <= 100; // Filter announcements within 100 miles
+        });
+        res.status(200).json(filteredAnnouncements);
+      } else {
+        res.status(200).json(announcements);
+      }
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
