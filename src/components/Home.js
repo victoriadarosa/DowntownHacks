@@ -8,6 +8,9 @@ const Home = ({ user, onLogout }) => {
     eventType: "",
     startTime: "",
   });
+  const [reportModalVisible, setReportModalVisible] = useState(false);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
+  const [reportReason, setReportReason] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,6 +60,18 @@ const Home = ({ user, onLogout }) => {
       .catch((error) => {
         console.error("Error fetching filtered announcements:", error);
       });
+  };
+
+  const handleReportClick = (announcement) => {
+    setSelectedAnnouncement(announcement);
+    setReportModalVisible(true);
+  };
+
+  const handleReportSubmit = () => {
+    console.log(`Reported Announcement ID: ${selectedAnnouncement._id}`);
+    console.log(`Reason: ${reportReason}`);
+    // Here you can also add any functionality to handle the report (e.g., send to backend).
+    setReportModalVisible(false);
   };
 
   return (
@@ -109,10 +124,33 @@ const Home = ({ user, onLogout }) => {
               </p>
               {announcement.picture && <img src={announcement.picture} alt="event" width={100} />}
               <p>{announcement.description}</p>
+
+              {/* Report Button */}
+              <button onClick={() => handleReportClick(announcement)}>Report</button>
             </li>
           ))}
         </ul>
       </div>
+
+      {/* Report Modal */}
+      {reportModalVisible && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div style={{ padding: "20px", backgroundColor: "white", margin: "100px auto", width: "300px" }}>
+            <h3>Report Reason</h3>
+            <textarea
+              placeholder="Enter your reason here"
+              value={reportReason}
+              onChange={(e) => setReportReason(e.target.value)}
+              rows="4"
+              style={{ width: "100%" }}
+            ></textarea>
+            <div>
+              <button onClick={handleReportSubmit}>Submit</button>
+              <button onClick={() => setReportModalVisible(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
