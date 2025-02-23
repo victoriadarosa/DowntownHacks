@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { fetchAnnouncements } from "../utils/api";
 import { fetchLocationAddress } from "../utils/geocode";
 import AnnouncementList from "./AnnouncementList";
 import ReportModal from "./ReportModal";
 import styles from "./styles/Home.module.css";
 
-const Home = ({ user, onLogout, userLocation }) => {
+const Home = ({ user, userLocation }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [locations, setLocations] = useState({});
   const [filters, setFilters] = useState({ eventType: "", startTime: "" });
@@ -14,7 +14,7 @@ const Home = ({ user, onLogout, userLocation }) => {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [reportReason, setReportReason] = useState("");
   const [userCity, setUserCity] = useState(""); // State to store the user's city
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // Fetch the user's city location when the component mounts or when userLocation changes
   useEffect(() => {
@@ -122,9 +122,6 @@ const Home = ({ user, onLogout, userLocation }) => {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>Welcome, {user.name}!</h1>
-        <button onClick={onLogout}>Logout</button>
-        <button onClick={() => navigate("/create-announcement")}>Create Announcement</button>
-        <button onClick={() => navigate("/map")}>Map</button>
       </header>
 
       {/* Filter Form */}

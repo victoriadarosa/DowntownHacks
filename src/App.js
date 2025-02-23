@@ -76,7 +76,7 @@ const App = () => {
 
   return (
     <Router>
-      {user && <NavBar />} {/* Show NavBaronly when user is logged in */}
+      <NavBar user={user} onLogout={handleLogout} /> {/* Show NavBaronly when user is logged in */}
       <Routes>
         <Route
           path="/"

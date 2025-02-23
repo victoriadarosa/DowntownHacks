@@ -2,10 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "../index.css";
 
-export default function NavBar() {
+const NavBar = ({user, onLogout}) => {
     return (
         <nav className="nav">
-            <NavLink to="/home" className="site-title">Site Name</NavLink>
+            <NavLink to="/home" className="site-title">Home</NavLink>
             <ul>
                 <li>
                     <NavLink to="/create-announcement" className={({ isActive }) => isActive ? "active" : ""}>
@@ -17,7 +17,14 @@ export default function NavBar() {
                         Map
                     </NavLink>
                 </li>
+                <li>
+                    <button onClick={onLogout} className="logout-button">
+                        Logout
+                    </button>
+                </li>
             </ul>
         </nav>
     );
-}
+};
+
+export default NavBar;
