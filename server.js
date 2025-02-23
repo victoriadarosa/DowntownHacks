@@ -28,14 +28,13 @@ const announcementSchema = new mongoose.Schema({
   longitude: Number,
   startTime: Date,
   endTime: Date,
-  picture: String,
   description: String,
 });
 
 const Announcement = mongoose.model("Announcement", announcementSchema);
 
 // Create Announcement API
-app.post("/api/announcements", upload.single("picture"), async (req, res) => {
+app.post("/api/announcements", async (req, res) => {
   console.log("Received request body:", req.body);
   console.log("Received file:", req.file);
 
@@ -45,8 +44,6 @@ app.post("/api/announcements", upload.single("picture"), async (req, res) => {
     return res.status(400).json({ message: "Invalid latitude or longitude" });
   }
 
-  const picturePath = req.file ? req.file.path : null;
-
   const newAnnouncement = new Announcement({
     eventName,
     eventType,
@@ -54,7 +51,6 @@ app.post("/api/announcements", upload.single("picture"), async (req, res) => {
     startTime: new Date(startTime),
     endTime: new Date(endTime),
     description,
-    picture: picturePath,
     latitude: parseFloat(latitude),
     longitude: parseFloat(longitude),
   });

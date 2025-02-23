@@ -8,7 +8,6 @@ const CreateAnnouncement = () => {
     const [location, setLocation] = useState({ lat: null, lng: null });
     const [startTime, setStartTime] = useState(""); 
     const [endTime, setEndTime] = useState(""); 
-    const [picture, setPicture] = useState(null);
     const [description, setDescription] = useState("");
     const navigate = useNavigate();
 
@@ -64,9 +63,6 @@ const CreateAnnouncement = () => {
         if (description) {
             formData.append("description", description);
         }
-        if (picture) {
-            formData.append("picture", picture);
-        }
 
         console.log({
             eventName,
@@ -75,7 +71,6 @@ const CreateAnnouncement = () => {
             startTime,
             endTime: endTime || "Not provided",
             description: description || "Not provided",
-            picture: picture ? picture.name : null,
         });
 
         try {
@@ -155,15 +150,6 @@ const CreateAnnouncement = () => {
                     type="datetime-local"
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
-                />
-            </div>
-
-            <div>
-                <label>Picture (Optional):</label>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setPicture(e.target.files[0])}
                 />
             </div>
 
