@@ -4,8 +4,10 @@ import Home from "./components/Home";
 import Map from "./components/Map";
 import CreateAnnouncement from "./components/CreateAnnouncement"; // Import CreateAnnouncement component
 import axios from "axios"; // Import axios for HTTP requests
+import NavBar from "./components/Navbar";
 
 const App = () => {
+  
   const [user, setUser] = useState(() => {
     // Retrieve user from session storage if available
     const savedUser = sessionStorage.getItem("user");
@@ -74,6 +76,7 @@ const App = () => {
 
   return (
     <Router>
+      {user && <NavBar />} {/* Show NavBaronly when user is logged in */}
       <Routes>
         <Route
           path="/"
