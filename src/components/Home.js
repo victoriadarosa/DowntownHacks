@@ -43,15 +43,32 @@ const Home = ({ user, onLogout, userLocation }) => {
             latitude: userLocation.latitude,
             longitude: userLocation.longitude,
           });
-          setAnnouncements(data);
-          fetchLocations(data);
+  
+          const now = new Date();
+  
+          // Filter announcements
+          const filteredData = data.filter((announcement) => {
+            const startTime = new Date(announcement.startTime);
+            const endTime = announcement.endTime ? new Date(announcement.endTime) : null;
+  
+            if (endTime) {
+              return endTime > now; // Keep if event has not ended
+            } else {
+              return now - startTime <= 24 * 60 * 60 * 1000; // Keep if within 24 hours of start
+            }
+          });
+  
+          setAnnouncements(filteredData);
+          fetchLocations(filteredData);
         } catch (error) {
           console.error("Failed to fetch announcements:", error);
         }
       };
+  
       fetchData();
     }
   }, [filters, userLocation]);
+  
 
   // Fetch location addresses for announcements
   const fetchLocations = async (announcements) => {

@@ -21,6 +21,24 @@ const Map = ({ announcements, userLocation }) => {
             return;
         }
 
+        const now = new Date();
+
+        // Filter out announcements where the event has already ended
+        const validAnnouncements = announcements.filter((announcement) => {
+            const startTime = new Date(announcement.startTime);
+            const endTime = announcement.endTime ? new Date(announcement.endTime) : null;
+
+            if (endTime && endTime < now) {
+                return false; // Exclude events with past end times
+            }
+
+            if (!endTime && now - startTime > 24 * 60 * 60 * 1000) {
+                return false; // Exclude events without an end time that started over 24 hours ago
+            }
+
+            return true;
+        });
+
         const center = {
             lat: parseFloat(userLocation.latitude),
             lng: parseFloat(userLocation.longitude),
@@ -31,7 +49,7 @@ const Map = ({ announcements, userLocation }) => {
             zoom: 10,
         });
 
-        const markers = announcements.map((announcement) => {
+        const markers = validAnnouncements.map((announcement) => {
             const lat = parseFloat(announcement.latitude);
             const lng = parseFloat(announcement.longitude);
 
