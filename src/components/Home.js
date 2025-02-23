@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useCallback } from "react";
 
 const Home = ({ user, onLogout }) => {
   const [announcements, setAnnouncements] = useState([]);
@@ -18,7 +19,7 @@ const Home = ({ user, onLogout }) => {
     fetchAnnouncements();
   }, []);
 
-  const fetchAnnouncements = () => {
+  const fetchAnnouncements = useCallback(() => {
     axios
       .get("http://localhost:5001/api/announcements")
       .then(async (response) => {
@@ -28,7 +29,7 @@ const Home = ({ user, onLogout }) => {
       .catch((error) => {
         console.error("Error fetching announcements:", error);
       });
-  };
+  }, []);
 
   const fetchLocations = async (announcements) => {
     const newLocations = {};
@@ -120,7 +121,7 @@ const Home = ({ user, onLogout }) => {
           <label>Event Type:</label>
           <select name="eventType" value={filters.eventType} onChange={handleFilterChange}>
             <option value="All">All</option>
-            <option value="Safety Hazard">Safety Hazard</option>
+            <option value="Safety Alerts">Safety Alerts</option>
             <option value="Local Events">Local Events</option>
             <option value="Outdoor Activities">Outdoor Activities</option>
             <option value="Volunteer">Volunteer</option>
@@ -151,7 +152,12 @@ const Home = ({ user, onLogout }) => {
               <h3>{announcement.eventName}</h3>
               <p>{announcement.eventType}</p>
               <p>{announcement.location}</p>
-              <p>📍 {locations[announcement._id] || "Fetching location..."}</p>
+              <p>
+                <span role="img" aria-label="location">
+                    📍
+                </span> 
+                {locations[announcement._id] || "Fetching location..."}
+                </p>
               <p>
                 {new Date(announcement.startTime).toLocaleString()}
                 {announcement.endTime ? ` - ${new Date(announcement.endTime).toLocaleString()}` : ""}
