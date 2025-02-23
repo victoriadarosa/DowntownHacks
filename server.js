@@ -67,35 +67,26 @@ app.post("/api/announcements", upload.single("picture"), async (req, res) => {
   }
 });
 
-// Get All Announcements
 app.get("/api/announcements", async (req, res) => {
-  try {
-    const { eventType, location, startDate, endDate } = req.query;
-    let filterQuery = {};
-
-    if (eventType) {
-      filterQuery.eventType = eventType;
+    try {
+      const { eventType, startTime } = req.query;
+      let filterQuery = {};
+  
+      if (eventType) {
+        filterQuery.eventType = eventType;
+      }
+      // Ensure that startTime and endTime are valid Date objects
+      if (startTime) {
+        filterQuery.startTime = { $gte: new Date(startTime) };
+      }
+  
+      const announcements = await Announcement.find(filterQuery);
+      res.status(200).json(announcements);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
     }
-
-    if (location) {
-      filterQuery.location = { $regex: new RegExp(location, "i") };
-    }
-
-    if (startDate && endDate) {
-      filterQuery.startTime = { $gte: new Date(startDate), $lte: new Date(endDate) };
-    } else if (startDate) {
-      filterQuery.startTime = { $gte: new Date(startDate) };
-    } else if (endDate) {
-      filterQuery.endTime = { $lte: new Date(endDate) };
-    }
-
-    const announcements = await Announcement.find(filterQuery);
-    res.status(200).json(announcements);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
+  });
+  
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

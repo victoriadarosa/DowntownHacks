@@ -6,9 +6,7 @@ const Home = ({ user, onLogout }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [filters, setFilters] = useState({
     eventType: "",
-    location: "",
-    startDate: "",
-    endDate: "",
+    startTime: "",
   });
   const navigate = useNavigate();
 
@@ -40,7 +38,7 @@ const Home = ({ user, onLogout }) => {
   };
 
   const handleFilterSubmit = () => {
-    if (!filters.eventType && !filters.location && !filters.startDate && !filters.endDate) {
+    if (!filters.eventType && !filters.startTime) {
       alert("Please fill at least one filter to apply.");
       return;
     }
@@ -85,16 +83,13 @@ const Home = ({ user, onLogout }) => {
           </select>
         </div>
         <div>
-          <label>Location:</label>
-          <input type="text" name="location" value={filters.location} onChange={handleFilterChange} />
-        </div>
-        <div>
-          <label>Start Date:</label>
-          <input type="date" name="startDate" value={filters.startDate} onChange={handleFilterChange} />
-        </div>
-        <div>
-          <label>End Date:</label>
-          <input type="date" name="endDate" value={filters.endDate} onChange={handleFilterChange} />
+          <label>Events Starting At or Later:</label>
+          <input
+            type="datetime-local"
+            name="startTime"
+            value={filters.startTime}
+            onChange={handleFilterChange}
+          />
         </div>
         <button onClick={handleFilterSubmit}>Filter</button>
       </div>
