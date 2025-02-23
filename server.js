@@ -91,7 +91,8 @@ const haversineDistance = (lat1, lon1, lat2, lon2) => {
         const userLon = parseFloat(longitude);
         const filteredAnnouncements = announcements.filter(announcement => {
           const distance = haversineDistance(userLat, userLon, announcement.latitude, announcement.longitude);
-          return distance <= 100;
+          //was 100
+          return distance <= 50;
         });
         res.status(200).json(filteredAnnouncements);
       } else {

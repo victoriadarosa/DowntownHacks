@@ -23,6 +23,8 @@ const Map = ({ announcements, userLocation }) => {
 
         const now = new Date();
 
+        console.log("All Announcements:", announcements);
+
         const validAnnouncements = announcements.filter((announcement) => {
             const startTime = new Date(announcement.startTime);
             const endTime = announcement.endTime ? new Date(announcement.endTime) : null;
@@ -37,6 +39,8 @@ const Map = ({ announcements, userLocation }) => {
 
             return true;
         });
+
+        console.log("Valid Announcements:", validAnnouncements);
 
         const center = {
             lat: parseFloat(userLocation.latitude),
