@@ -33,8 +33,7 @@ const Login = ({ setUser }) => {
   return (
     <div className="login-container">
       <h1 className="login-header">Community Board</h1>
-      <p className="login-paragraph"> A digital notice board </p>
-      <p className="login-paragraph"> Post and discover local events, volunteer opportunities, and neighborhood news. </p>
+      <h3 className="login-h3">Stay Updated, Stay Engaged.</h3>
       <div
         className="g_id_signin"
         data-type="standard"
@@ -44,6 +43,8 @@ const Login = ({ setUser }) => {
         data-shape="rectangular"
         data-logo_alignment="left"
       ></div>
+      <p className="login-paragraph"> A digital notice board </p>
+      <p className="login-paragraph"> Post and discover local events, volunteer opportunities, and neighborhood news. </p>
     </div>
   );
 };

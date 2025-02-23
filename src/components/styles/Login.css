@@ -14,18 +14,31 @@
   }
   
   .login-header {
-    margin-bottom: 4px;
+    margin-bottom: 0px;
     color: whitesmoke;
     font-size: 75px;
   }
 
-  .login-paragraph {
+  .login-h3 {
+    margin-top: 0px;
     margin-bottom: 20px;
+    color: whitesmoke;
+    font-size: 25px;
+  }
+
+  .login-paragraph {
+    margin-top: 0px;
+    margin-bottom: 0px;
     color: #F6E2B9;
+    font-size: 20px;
   }
   
   .g_id_signin {
     display: flex;
     justify-content: center;
+  }
+
+  .g_id_signin {
+    margin-bottom: 20px; /* Adjust the value as needed */
   }
   
