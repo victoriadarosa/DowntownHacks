@@ -15,7 +15,7 @@ const AnnouncementList = ({ announcements, locations, onReportClick }) => {
 
         return (
           <div key={announcement._id} className={styles.announcementCard}>
-            <h3>{announcement.title}</h3>
+            <h3>{announcement.eventName}</h3>
             <p>{announcement.description}</p>
             <p>
               Location: {locations[announcement._id] || "Unknown"}
