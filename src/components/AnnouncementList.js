@@ -1,28 +1,20 @@
 import React from "react";
+import styles from "./styles/Home.module.css";
 
 const AnnouncementList = ({ announcements, locations, onReportClick }) => {
   return (
-    <ul>
+    <div className={styles.announcementGrid}>
       {announcements.map((announcement) => (
-        <li key={announcement._id}>
-          <h3>{announcement.eventName}</h3>
-          <p>{announcement.eventType}</p>
-          <p>{announcement.location}</p>
-          <p>
-            <span role="img" aria-label="location">
-              📍
-            </span>
-            {locations[announcement._id] || "Fetching location..."}
-          </p>
-          <p>
-            {new Date(announcement.startTime).toLocaleString()}
-            {announcement.endTime ? ` - ${new Date(announcement.endTime).toLocaleString()}` : ""}
-          </p>
+        <div key={announcement._id} className={styles.announcementCard}>
+          <h3>{announcement.title}</h3>
           <p>{announcement.description}</p>
+          <p>
+            Location: {locations[announcement._id] || "Unknown"}
+          </p>
           <button onClick={() => onReportClick(announcement)}>Report</button>
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 };
 
