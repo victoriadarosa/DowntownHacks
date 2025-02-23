@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchAnnouncements } from "../utils/api";
 import { fetchLocationAddress } from "../utils/geocode";
+import AnnouncementList from "./AnnouncementList";
 import ReportModal from "./ReportModal";
 import styles from "./styles/Home.module.css";
 
-const Home = ({ user, userLocation }) => {
+const Home = ({ user, onLogout, userLocation }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [locations, setLocations] = useState({});
   const [filters, setFilters] = useState({ eventType: "", startTime: "" });
@@ -21,6 +22,7 @@ const Home = ({ user, userLocation }) => {
         try {
           const address = await fetchLocationAddress(userLocation.latitude, userLocation.longitude);
           setUserCity(address.city || address.locality || "Your Location");
+          // console.log("City: ", address.city);
         } catch (error) {
           console.error("Failed to fetch user city:", error);
           setUserCity("Your Location");
@@ -53,8 +55,12 @@ const Home = ({ user, userLocation }) => {
             }
           });
   
-          setAnnouncements(filteredData);
-          fetchLocations(filteredData);
+          const sortedAnnouncements = filteredData.sort((a, b) => {
+            return new Date(a.startTime) - new Date(b.startTime);
+          });
+  
+          setAnnouncements(sortedAnnouncements);
+          fetchLocations(sortedAnnouncements);
         } catch (error) {
           console.error("Failed to fetch announcements:", error);
         }
@@ -115,41 +121,53 @@ const Home = ({ user, userLocation }) => {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>Welcome, {user.name}!</h1>
+        <button onClick={onLogout}>Logout</button>
+        <button onClick={() => navigate("/create-announcement")}>Create Announcement</button>
+        <button onClick={() => navigate("/map")}>Map</button>
       </header>
 
-      <div className={styles.filterSection}>
-        <label>Event Type:</label>
-        <select name="eventType" value={filters.eventType} onChange={handleFilterChange}>
-          <option value="All">All</option>
-          <option value="Safety Alerts">Safety Alerts</option>
-          <option value="Local Events">Local Events</option>
-          <option value="Outdoor Activities">Outdoor Activities</option>
-          <option value="Volunteer">Volunteer</option>
-          <option value="Health">Health</option>
-          <option value="Family & Kids">Family & Kids</option>
-          <option value="Networking">Networking</option>
-          <option value="Other">Other</option>
-        </select>
-        <label>Events Starting At or Later:</label>
-        <input type="datetime-local" name="startTime" value={filters.startTime} onChange={handleFilterChange} />
+      {/* Filter Form */}
+      <div>
+        <h2>Filter Announcements</h2>
+        <div>
+          <label>Event Type:</label>
+          <select name="eventType" value={filters.eventType} onChange={handleFilterChange}>
+            <option value="All">All</option>
+            <option value="Safety Alerts">Safety Alerts</option>
+            <option value="Local Events">Local Events</option>
+            <option value="Outdoor Activities">Outdoor Activities</option>
+            <option value="Volunteer">Volunteer</option>
+            <option value="Health">Health</option>
+            <option value="Family & Kids">Family & Kids</option>
+            <option value="Networking">Networking</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label>Events Starting At or Later:</label>
+          <input
+            type="datetime-local"
+            name="startTime"
+            value={filters.startTime}
+            onChange={handleFilterChange}
+          />
+        </div>
         <button onClick={handleFilterSubmit}>Filter</button>
       </div>
 
+      {/* Display user's city location alongside the Announcements heading */}
       <h1>
         Announcements {userCity && <span>(Near {userCity})</span>}
       </h1>
 
-      <div className={styles.announcementGrid}>
-        {announcements.map((announcement) => (
-          <div key={announcement._id} className={styles.announcementCard}>
-            <h3>{announcement.title}</h3>
-            <p>{announcement.description}</p>
-            <p><strong>Location:</strong> {locations[announcement._id] || "Unknown"}</p>
-            <button onClick={() => handleReportClick(announcement)}>Report</button>
-          </div>
-        ))}
-      </div>
+      {/* Announcement List */}
+      <AnnouncementList
+        announcements={announcements}
+        locations={locations}
+        onReportClick={handleReportClick}
+      />
 
+      {/* Report Modal */}
       <ReportModal
         isVisible={reportModalVisible}
         onClose={() => setReportModalVisible(false)}
