@@ -1,0 +1,93 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .title {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .primaryButton {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .secondaryButton {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .filterSection {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+  }
+  
+  .filterTitle {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .filterForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .filterItem {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .filterLabel {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .filterInput {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+  }
+  
+  .filterButton {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .filterButton:hover {
+    background-color: #218838;
+  }
+  
