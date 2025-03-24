@@ -8,3 +8,12 @@ Currently, Buzz Board is only supported on localhost. To run the application, do
 
 ## How to use Buzz Board
 Buzz Board allows users to easily discover local events and announcements within a 50-mile radius of their location. Users can view announcements on an interactive map, which displays how close events are to them. The application features user authentication for secure access, enabling users to create and upload their own announcements using a simple form. They can filter announcements by location and sort them by event type or start time, ensuring they find relevant activities. With Buzz Board, users can stay informed and engaged with their community by exploring opportunities to participate in local events, volunteer activities, and neighborhood news.
+
+## Tech Stack
+* React – Frontend
+* Node.js (Express.js) – Backend
+* MongoDB (Mongoose) – Database
+* Google Maps API – Geolocation
+
+## My Contributions
+This project was completed with a parter. We utilized peer programming to complete the google authentication login and setting up mongo db. Individually, I mainly worked on developing user-friendly forms for data input, ensuring proper storage and retrieval of information in MongoDB, and implementing components for geolocation functionality. 
