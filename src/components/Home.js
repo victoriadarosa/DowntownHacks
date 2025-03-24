@@ -1,3 +1,9 @@
+/**
+ * This component represents the main homepage of the application where users can view announcements
+ * filtered by various criteria such as event type and start time. The component also includes features
+ * for reporting announcements and displaying announcements based on the user's location.
+ */
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchAnnouncements } from "../utils/api";
@@ -35,7 +41,6 @@ const Home = ({ user, onLogout, userLocation }) => {
     if (userLocation) {
       const fetchData = async () => {
         try {
-          // Remove filters for 'All' eventType
           const filtersToApply = { ...filters, latitude: userLocation.latitude, longitude: userLocation.longitude };
           if (filtersToApply.eventType === "All") {
             delete filtersToApply.eventType;
@@ -101,7 +106,7 @@ const Home = ({ user, onLogout, userLocation }) => {
     const filtersToApply = { ...filters, latitude: userLocation.latitude, longitude: userLocation.longitude };
 
     if (filtersToApply.eventType === "All") {
-      delete filtersToApply.eventType; // Remove 'eventType' if "All" is selected
+      delete filtersToApply.eventType;
     }
 
     fetchAnnouncements(filtersToApply).then((data) => {
