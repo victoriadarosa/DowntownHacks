@@ -1,3 +1,9 @@
+/**
+ * This component displays a Google Map with markers representing announcements near the user's location.
+ * The map is centered around the user's location, and markers are placed for valid announcements based 
+ * on their geographical coordinates. It uses the Google Maps API and MarkerClusterer for efficient marker clustering.
+ */
+
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"; 
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
