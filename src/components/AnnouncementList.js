@@ -1,3 +1,11 @@
+/**
+ * AnnouncementList component displays a list of announcements in a grid layout.
+ * Each announcement includes details like the event name, location, start and end times, description, 
+ * and a report button to flag inappropriate announcements.
+ * 
+ * The component also dynamically assigns a random background color to each announcement card.
+ */
+
 import React, { useState, useEffect } from "react";
 import styles from "./styles/Home.module.css";
 import { FaExclamationTriangle } from "react-icons/fa";
