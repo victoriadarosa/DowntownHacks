@@ -1,7 +1,7 @@
 /**
- * CreateAnnouncement component allows users to create new announcements by providing relevant event details such as name, type, location, start and end times, and description.
- * The location input utilizes Google Maps Autocomplete to assist the user in entering a valid address.
- * After submitting the form, the announcement is sent to the server via the `createAnnouncement` function.
+ * CreateAnnouncement component allows users to create new announcements by providing relevant event details such as 
+ * name, type, location, start and end times, and description. The location input utilizes Google Maps Autocomplete to assist 
+ * the user in entering a valid address. After submitting the form, the announcement is sent to the server via the `createAnnouncement` function.
  */
 
 import React, { useState, useEffect, useRef } from "react";
