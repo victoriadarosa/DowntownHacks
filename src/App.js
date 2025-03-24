@@ -1,3 +1,17 @@
+/**
+ * Main entry point for the application.
+ * 
+ * This React app allows users to log in, view announcements, create new announcements, and view them on a map. 
+ * It includes routing, authentication, and location fetching features.
+ * 
+ * Components:
+ * - Home: Displays a homepage with user details and logout option.
+ * - Map: Displays a map of announcements based on the user's location.
+ * - CreateAnnouncement: Form to create a new announcement.
+ * - NavBar: A navigation bar that is shown only when the user is logged in.
+ * - Login: Login screen for user authentication.
+ */
+
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from "./components/Home";
