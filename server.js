@@ -1,3 +1,13 @@
+/**
+ * Express.js server for managing event announcements.
+ * 
+ * Endpoints:
+ * - POST /api/announcements: Create a new event announcement.
+ * - GET /api/announcements: Retrieve announcements with optional filters (event type, start time, location).
+ * 
+ * MongoDB URI is stored in the .env file.
+ */
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -12,8 +22,9 @@ app.use(express.urlencoded({ extended: true }));
 
 const upload = multer({ dest: "uploads/" });
 
+// Store MongoDB account information in .env file
 mongoose
-  .connect("mongodb+srv://tuyendang486:dUgykBMiPEmQbLoL@communityboard.vvgkm.mongodb.net/communityboard?retryWrites=true&w=majority")
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
